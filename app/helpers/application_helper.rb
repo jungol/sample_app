@@ -11,3 +11,4 @@ module ApplicationHelper
     end #full_title
 
 end
+
