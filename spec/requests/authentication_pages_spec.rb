@@ -10,13 +10,12 @@ describe "Authentication" do
     it { should have_content('Sign in') }
     it { should have_title('Sign in') }
   
-  end 
+  end
   
   describe "signin" do
-    before { visit signin_path }
     
     describe "with invalid information" do
-      before { click_button "Sign in" }
+      before { sign_in(User.new) }
       
       it { should have_title('Sign in') }
       it { should have_error_message('Invalid') }
@@ -29,7 +28,7 @@ describe "Authentication" do
     
     describe "with valid information" do
       let(:user) { FactoryGirl.create(:user) }
-      before { valid_signin(user) }
+      before { sign_in user }
       
       it { should have_title(user.name) }
       it { should have_link('Profile',     href: user_path(user))      }
@@ -39,8 +38,13 @@ describe "Authentication" do
       it { should have_link('Users',       href: users_path)           }
       
       describe "followed by signout" do
-        before { click_link "Sign out" }
+        before { sign_out }
+        
         it { should have_link('Sign in') }
+        it { should_not have_link('Profile',     href: user_path(user)      ) }
+        it { should_not have_link('Sign out',    href: signout_path         ) }
+        it { should_not have_link('Settings',    href: edit_user_path(user) ) }
+        it { should_not have_link('Users',       href: users_path           ) }     
       end
     end
   end
@@ -53,15 +57,19 @@ describe "Authentication" do
       describe "when attempting to visit a protected page" do
         before do
           visit edit_user_path(user)
-          fill_in "Email", with: user.email
-          fill_in "Password", with: user.password
-          click_button "Sign in"
+          valid_signin(user)
         end
         
         describe "after signing in" do
          
           it "should render the desired protected page" do
             expect(page).to have_title('Edit user')
+          end
+          
+          describe "should render default (profile) page on subsequent signin" do
+            before { sign_out }
+            before { sign_in user }
+            specify { expect(page).to have_title(user.name) }
           end
         end
       end
@@ -111,7 +119,30 @@ describe "Authentication" do
       describe "submitting a DELETE request to the Users#destroy action" do
         before { delete user_path(user) }
         specify { expect(response).to redirect_to(root_url) }
+      end   
+      
+      describe "visiting the signup page" do
+        before { visit signup_path }
+        specify { expect( redirect_to(root_path) ) }
+      end
+        
+      describe "submitting a CREATE request to the Users#create action" do
+        before { post users_path }
+        specify { expect(redirect_to(root_path) ) }
+      end
+    end
+    
+    describe "as admin user" do
+      let(:admin) {FactoryGirl.create(:admin) }
+      before { sign_in admin, no_capybara: true }
+      
+      describe "submitting a DELETE request on him/herself to the Users#destroy action" do
+        before { delete user_path(admin) }
+        specify { expect(redirect_to(users_path) )}
+        #this doesn't really test that the user hasn't been deleted. Need to learn rspec better
+        
       end
     end
   end
 end
+

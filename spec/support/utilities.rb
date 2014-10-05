@@ -17,6 +17,10 @@ def sign_in(user, options={})
     valid_signin(user)
   end
 end
+
+def sign_out
+  click_link 'Sign out'
+end
     
 RSpec::Matchers.define :have_error_message do |message|
   match do |page|
