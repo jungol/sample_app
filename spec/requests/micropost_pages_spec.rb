@@ -4,7 +4,9 @@ describe "MicropostPages" do
   
   subject { page }
   
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user)   { FactoryGirl.create(:user) }
+  let(:user2) { FactoryGirl.create(:user) }
+  let(:m2) { FactoryGirl.create(:micropost, user: user2) }
   before { sign_in user }
   
   describe "micropost creation" do
@@ -42,4 +44,15 @@ describe "MicropostPages" do
       end
     end
   end
+  
+  describe "other users' microposts" do
+    before { visit user_path(user2) }
+  
+    describe "should not have delete links" do
+      
+      it { should_not have_link("delete") }
+    
+    end
+  end
+    
 end
