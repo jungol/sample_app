@@ -9,24 +9,24 @@ describe "Authentication" do
     
     it { should have_content('Sign in') }
     it { should have_title('Sign in') }
-  
+    it { should have_content('Forgot Password?') }
   end
-  
+
   describe "signin" do
     
-    describe "with invalid information" do
+    context "with invalid information" do
       before { sign_in(User.new) }
       
       it { should have_title('Sign in') }
       it { should have_error_message('Invalid') }
     
-      describe "after visiting another page" do
+      context "after visiting another page" do
         before { click_link "Home" }
         it { should_not have_error_message('Invalid') }
       end
     end # "with invalid information"
     
-    describe "with valid information" do
+    context "with valid information" do
       let(:user) { FactoryGirl.create(:user) }
       before { sign_in user }
       
@@ -37,7 +37,7 @@ describe "Authentication" do
       it { should_not have_link('Sign in', href: signin_path)          }
       it { should have_link('Users',       href: users_path)           }
       
-      describe "followed by signout" do
+      context "followed by signout" do
         before { sign_out }
         
         it { should have_link('Sign in') }
@@ -48,25 +48,25 @@ describe "Authentication" do
       end
     end
   end
-  
+
   describe "authorization" do
     
-    describe "for non-signed-in users" do
+    context "for non-signed-in users" do
       let(:user) { FactoryGirl.create(:user) }
       
-      describe "when attempting to visit a protected page" do
+      context "when attempting to visit a protected page" do
         before do
           visit edit_user_path(user)
           valid_signin(user)
         end
         
-        describe "after signing in" do
+        context "after signing in" do
          
           it "should render the desired protected page" do
             expect(page).to have_title('Edit user')
           end
           
-          describe "should render default (profile) page on subsequent signin" do
+          context "should render default (profile) page on subsequent signin" do
             before { sign_out }
             before { sign_in user }
             specify { expect(page).to have_title(user.name) }
@@ -74,49 +74,49 @@ describe "Authentication" do
         end
       end
       
-      describe "in the Users controller" do
+      context "in the Users controller" do
       
-        describe "visiting the edit page" do
+        context "visiting the edit page" do
           before { visit edit_user_path(user) }
           it {should have_title('Sign in') }
         end
         
-        describe "submitting to the update action" do
+        context "submitting to the update action" do
           before { patch user_path(user) }
           specify { expect(response).to redirect_to(signin_path) }
         end
         
-        describe "visiting the user index" do
+        context "visiting the user index" do
           before { visit users_path }
           it { should have_title('Sign in') }
         end
         
-        describe "visiting the following page" do
+        context "visiting the following page" do
           before { visit following_user_path(user) }
           it { should have_title('Sign in') }
         end
         
-        describe "visiting the followers pages" do
+        context "visiting the followers pages" do
           before { visit followers_user_path(user) }
           it { should have_title('Sign in') }
         end
         
       end
       
-      describe "in the Microposts controller" do
+      context "in the Microposts controller" do
         
-        describe "submitting to the create action" do
+        context "submitting to the create action" do
           before { post microposts_path }
           specify { expect(response).to redirect_to(signin_path) }
         end
         
-        describe "submitting to the destroy action" do
+        context "submitting to the destroy action" do
           before { delete micropost_path(FactoryGirl.create(:micropost)) }
           specify { expect(response).to redirect_to(signin_path) }
         end
       end
       
-      describe "in the Relationships controller" do
+      context "in the Relationships controller" do
         
         describe "submitting to the create action" do
           before { post relationships_path }
@@ -169,6 +169,12 @@ describe "Authentication" do
         before { post users_path }
         specify { expect(redirect_to(root_path) ) }
       end
+    
+      describe "visiting the reset password page" do
+        before { visit new_password_reset_path }
+        specify { expect(redirect_to(root_path))}
+      end
+
     end
     
     describe "as admin user" do
@@ -184,4 +190,5 @@ describe "Authentication" do
     end
   end
 end
+
 

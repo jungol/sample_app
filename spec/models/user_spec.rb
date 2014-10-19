@@ -26,6 +26,8 @@ describe User do
   it { should respond_to(:following?)            }
   it { should respond_to(:follow!)               }
   it { should respond_to(:unfollow!)             }
+  it { should respond_to(:password_reset_token)  }
+  it { should respond_to(:password_reset_sent_at)}
 
   it { should be_valid }
   it { should_not be_admin }
@@ -200,6 +202,27 @@ describe User do
       
       it { should_not be_following(other_user) }
       its(:followed_users) { should_not include(other_user) }
+    end
+  end
+
+  describe "#send_password_reset" do
+    let(:user) {FactoryGirl.create(:user) }
+    
+    it "generates a unique password_reset_token each time" do
+      user.send_password_reset
+      last_token = user.password_reset_token
+      user.send_password_reset
+      expect(user.password_reset_token).not_to eq(last_token)
+    end
+
+    it "saves the time the password reset was sent" do
+      user.send_password_reset
+      expect(user.reload.password_reset_sent_at).to be_present
+    end
+
+    it "delivers email to user" do
+      user.send_password_reset
+      expect(last_email.to).to include(user.email)
     end
   end
 end

@@ -7,6 +7,7 @@ SampleApp::Application.routes.draw do
   resources :sessions,      only: [:new, :destroy, :create]
   resources :microposts,    only: [:create, :destroy      ]
   resources :relationships, only: [:create, :destroy      ]
+  resources :password_resets
   root 'static_pages#home'
   match '/signup',  to: 'users#new',            via: 'get'
   match '/help',    to: 'static_pages#help',    via: 'get'

@@ -3,13 +3,6 @@ require 'spec_helper'
 describe "User pages" do
 
   subject { page }
-
-  describe "signup page" do
-    before { visit signup_path }
-
-    it { should have_content('Sign up') }
-    it { should have_title(full_title('Sign up')) }
-  end
   
   describe "profile page" do
     let(:user) { FactoryGirl.create(:user) }
@@ -97,7 +90,7 @@ describe "User pages" do
     it { should have_content('Sign up') }
     it { should have_title(full_title('Sign up')) }
   end
-  
+
   describe "signup" do
     before { visit signup_path }
     
@@ -188,7 +181,7 @@ describe "User pages" do
       specify { expect(user.reload).not_to be_admin }
     end
   end
-  
+
   describe "index" do
     let(:user) { FactoryGirl.create(:user) }
     before do
@@ -262,5 +255,5 @@ describe "User pages" do
       it { should have_link(user.name, href: user_path(user)) }
     end
   end
-
 end
+
