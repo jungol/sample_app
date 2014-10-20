@@ -1,4 +1,5 @@
 SampleApp::Application.routes.draw do
+  get "account_confirmations/new"
   resources :users do
     member do
       get :following, :followers

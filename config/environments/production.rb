@@ -82,6 +82,6 @@ SampleApp::Application.configure do
   # and use secure cookies.
   config.force_ssl = true
 
-  config.action_mailer.default_url_options = { :host => "mighty-springs-9448.herokuapp.com" }
+  config.action_mailer.default_url_options = { :host => "https://www.mighty-springs-9448.herokuapp.com" }
 
 end
