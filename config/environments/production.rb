@@ -82,6 +82,18 @@ SampleApp::Application.configure do
   # and use secure cookies.
   config.force_ssl = true
 
-  config.action_mailer.default_url_options = { :host => "https://www.mighty-springs-9448.herokuapp.com" }
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default_url_options = { :host => "mighty-springs-9448.herokuapp.com" }
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+     :address => "smtp.gmail.com",
+     :port => 587,
+     :domain => "gmail.com",
+     :authentication => 'plain',
+     :user_name => "ethanbarhydt",
+     :password => "jzbietivmpefndww",
+     :enable_starttls_auto => true
+  }
 
 end
