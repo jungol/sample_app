@@ -1,14 +1,14 @@
 SampleApp::Application.routes.draw do
-  get "account_confirmations/new"
   resources :users do
     member do
       get :following, :followers
     end
   end
-  resources :sessions,      only: [:new, :destroy, :create]
-  resources :microposts,    only: [:create, :destroy      ]
-  resources :relationships, only: [:create, :destroy      ]
+  resources :sessions,              only: [:new, :destroy, :create]
+  # resources :microposts,            only: [:create, :destroy      ]
+  resources :relationships, :microposts,         only: [:create, :destroy      ]
   resources :password_resets
+  resources :account_confirmations, only: [:new, :create          ]
   root 'static_pages#home'
   match '/signup',  to: 'users#new',            via: 'get'
   match '/help',    to: 'static_pages#help',    via: 'get'

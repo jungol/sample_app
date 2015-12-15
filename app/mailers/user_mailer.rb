@@ -4,7 +4,12 @@ class UserMailer < ActionMailer::Base
 
   def password_reset(user)
     @user = user #for use in view
-    @url = 'http://www.google.com'
     mail to: user.email, subject: "Password Reset"
   end
+
+  def account_confirmation(user)
+  	@user = user
+  	mail to: user.email, subject: "Account Confirmation"
+  end
+
 end

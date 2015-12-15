@@ -5,3 +5,18 @@
   </div>
   <%= f.submit "Post", class: "btn btn-large btn-primary" %>
 <% end %>
+
+<script>
+
+  $('.new_micropost textarea').click(function() {
+    mixpanel.track("Compose micropost");
+  })
+  
+  $('.new_micropost input').click(function() {
+    $content = $(this).prev().text();
+    mixpanel.track("Submit micropost", {
+      "post": $content
+    });
+  })
+
+</script>

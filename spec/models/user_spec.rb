@@ -225,4 +225,34 @@ describe User do
       expect(last_email.to).to include(user.email)
     end
   end
+
+  describe "#send_account_confirmation" do
+    let(:user) { FactoryGirl.create(:user) }
+
+    it "generates a unique account_confirmation_token each time" do
+      user.send_account_confirmation
+      last_token = user.account_confirmation_token
+      user.send_account_confirmation
+      expect(user.account_confirmation_token).not_to eq(last_token)
+    end
+
+    it "knows the account is not confirmed" do
+      user.send_password_reset
+      expect(user.confirmed).to eq(false)
+    end
+
+    it "delivers email to user" do
+      user.send_account_confirmation
+      expect(last_email.to).to include(user.email)
+    end
+  end
+
+
 end
+
+
+
+
+
+
+

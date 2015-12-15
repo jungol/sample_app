@@ -7,3 +7,12 @@
   <% end %>
   </div>
 <% end %>
+
+<script>
+  $('#follow_form').click(function() {
+    $action = $('#follow_form').children().children('input').val()
+    mixpanel.track("(Un)Follow", {
+    	"action":$action
+    });
+  })
+</script>

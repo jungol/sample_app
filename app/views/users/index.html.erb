@@ -8,3 +8,13 @@
 </ul>
 
 <%= will_paginate %>
+
+<script>
+  $('.users li a').click(function() {
+  	$user = $(this).text();
+    mixpanel.track("Click user",
+    {
+    	"user": $user
+    });
+  })
+</script>

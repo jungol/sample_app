@@ -47,6 +47,12 @@ class User < ActiveRecord::Base
     UserMailer.password_reset(self).deliver
   end
 
+  def send_account_confirmation
+    generate_token(:account_confirmation_token)
+    save!
+    UserMailer.account_confirmation(self).deliver
+  end
+
   def generate_token(column)
     begin
       self[column] = SecureRandom.urlsafe_base64

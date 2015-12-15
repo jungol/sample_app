@@ -6,4 +6,12 @@
 <% end %>
 
   
-  
+<script>
+  $('.microposts li a').click(function() {
+  	$micropost = $(this).parent().children('.content').text();
+    mixpanel.track("Delete post",
+    {
+    	"micropost": $micropost
+    });
+  })
+</script>

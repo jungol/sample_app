@@ -10,7 +10,7 @@ class UsersController < ApplicationController
   end
   
   def new
-    @user = User.new
+    @user ||= User.new
   end
   
   def show
@@ -22,7 +22,9 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       sign_in @user
+      @user.send_account_confirmation
       flash[:success] = "Welcome to the Sample App"
+      flash[:notice] = "Check your email"
       redirect_to @user
     else
       render 'new'
